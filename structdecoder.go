@@ -2,7 +2,6 @@ package argdecoder
 
 import (
 	"fmt"
-	"pempal/logger"
 	"reflect"
 	"strconv"
 	"strings"
@@ -30,7 +29,6 @@ func (sd structParser) Apply(v interface{}) ([]string, error) {
 	for f, sv := range flags {
 		fld, err := fieldForName(f, structVal.Elem())
 		if err != nil {
-			logger.Log(logger.Debug, "%v", err)
 			unknownFlags[f] = sv
 			continue
 		}

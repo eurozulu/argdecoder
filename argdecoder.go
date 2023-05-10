@@ -21,10 +21,10 @@ func ApplyArguments(args []string, v interface{}) ([]string, error) {
 	if vv.IsNil() {
 		return nil, fmt.Errorf("can not apply to nil value")
 	}
-	if vv.Kind() != reflect.Pointer {
-		return nil, fmt.Errorf("can not apply to ap non pointer")
-	}
+
 	switch vv.Elem().Kind() {
+	case reflect.Pointer:
+		return ApplyArguments(args, vv.Elem())
 	case reflect.Struct:
 		return structParser{args: args}.Apply(v)
 	case reflect.Map:
