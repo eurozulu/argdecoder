@@ -101,42 +101,42 @@ func stringAsValue(svalue *string, vtype reflect.Type) (reflect.Value, error) {
 		return sliceValueForString(svalue, vtype)
 
 	case reflect.String:
-		return reflect.ValueOf(s), nil
+		return reflect.ValueOf(s).Convert(vtype), nil
 
 	case reflect.Bool:
 		b, err := strconv.ParseBool(s)
 		if err != nil {
 			return reflect.Value{}, errBoolFailedToParse
 		}
-		return reflect.ValueOf(b), nil
+		return reflect.ValueOf(b).Convert(vtype), nil
 
-	case reflect.Uint:
+	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 		ui, err := strconv.ParseUint(s, 10, 64)
 		if err != nil {
 			return reflect.Value{}, fmt.Errorf("Failed to convert %s into an uint value  %v", s, err)
 		}
-		return reflect.ValueOf(ui), nil
+		return reflect.ValueOf(ui).Convert(vtype), nil
 
-	case reflect.Int:
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 		i, err := strconv.ParseInt(s, 10, 64)
 		if err != nil {
 			return reflect.Value{}, fmt.Errorf("Failed to convert %s into a int value  %v", s, err)
 		}
-		return reflect.ValueOf(i), nil
+		return reflect.ValueOf(i).Convert(vtype), nil
 
 	case reflect.Float64:
 		f, err := strconv.ParseFloat(s, 64)
 		if err != nil {
 			return reflect.Value{}, fmt.Errorf("Failed to convert %s into a floatvalue  %v", s, err)
 		}
-		return reflect.ValueOf(f), nil
+		return reflect.ValueOf(f).Convert(vtype), nil
 
 	case reflect.Float32:
 		f, err := strconv.ParseFloat(s, 32)
 		if err != nil {
 			return reflect.Value{}, fmt.Errorf("Failed to convert %s into a floatvalue  %v", s, err)
 		}
-		return reflect.ValueOf(f), nil
+		return reflect.ValueOf(f).Convert(vtype), nil
 
 	default:
 		return reflect.Value{}, fmt.Errorf("%s type is not supported", vtype.Kind().String())
