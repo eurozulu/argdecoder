@@ -3,7 +3,6 @@ package argdecoder
 import (
 	"fmt"
 	"reflect"
-	"strings"
 )
 
 type ArgumentDecoder interface {
@@ -36,26 +35,4 @@ func ApplyArguments(args []string, v interface{}) ([]string, error) {
 	default:
 		return nil, fmt.Errorf("%s is not ap supported type", vv.Type().String())
 	}
-}
-
-// ParseArgs parses the given args slice into flags and parameters.
-// Flags are any argument beginning with a dash '-'. Any argument following a flag argument is treated as that flags value,
-// unless it is a flag itself.
-// parameters are all other arguments, not flags and not treated as a flag value.
-func ParseArgs(args []string) (params []string, flags map[string]*string) {
-	flags = map[string]*string{}
-	for index := 0; index < len(args); index++ {
-		if !strings.HasPrefix(args[index], "-") {
-			params = append(params, args[index])
-			continue
-		}
-		flag := strings.ToLower(strings.TrimLeft(args[index], "-"))
-		var value *string
-		if index+1 < len(args) && !strings.HasPrefix(args[index+1], "-") {
-			index++
-			value = &args[index]
-		}
-		flags[flag] = value
-	}
-	return params, flags
 }
