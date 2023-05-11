@@ -3,6 +3,7 @@ package argdecoder
 import (
 	"fmt"
 	"reflect"
+	"strings"
 )
 
 type mapDecoder struct {
@@ -22,7 +23,7 @@ func (md mapDecoder) Apply(v interface{}) ([]string, error) {
 		return nil, fmt.Errorf("can not decode into maps without interface values")
 	}
 
-	params, flags := ParseArgs(md.args)
+	params, flags := parseArgs(md.args)
 	m := map[string]interface{}{}
 	if len(params) > 0 {
 		m[""] = params
@@ -32,4 +33,22 @@ func (md mapDecoder) Apply(v interface{}) ([]string, error) {
 	}
 	mapValue.Set(reflect.ValueOf(m))
 	return nil, nil
+}
+
+func parseArgs(args []string) (params []string, flags map[string]*string) {
+	flags = map[string]*string{}
+	for index := 0; index < len(args); index++ {
+		if !strings.HasPrefix(args[index], "-") {
+			params = append(params, args[index])
+			continue
+		}
+		flag := strings.ToLower(strings.TrimLeft(args[index], "-"))
+		var value *string
+		if index+1 < len(args) && !strings.HasPrefix(args[index+1], "-") {
+			index++
+			value = &args[index]
+		}
+		flags[flag] = value
+	}
+	return params, flags
 }
