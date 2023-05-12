@@ -172,7 +172,7 @@ func sliceValueForString(sp *string, vtype reflect.Type) (reflect.Value, error) 
 	}
 	ss := strings.Split(*sp, ",")
 	el := vtype.Elem()
-	sv := reflect.MakeSlice(el, len(ss), len(ss))
+	sv := reflect.MakeSlice(vtype, len(ss), len(ss))
 	for i, sz := range ss {
 		v, err := stringAsValue(&sz, el)
 		if err != nil {
