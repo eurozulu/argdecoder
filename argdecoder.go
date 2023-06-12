@@ -16,7 +16,14 @@ type ArgumentDecoder interface {
 	Apply(v interface{}) ([]string, error)
 }
 
+type ArgumentUnmarshaler interface {
+	UnmarshalArguments([]string) ([]string, error)
+}
+
 func ApplyArguments(args []string, v interface{}) ([]string, error) {
+	if vm, ok := v.(ArgumentUnmarshaler); ok {
+		return vm.UnmarshalArguments(args)
+	}
 	vv := reflect.ValueOf(v)
 	if vv.IsNil() {
 		return nil, fmt.Errorf("can not apply to nil value")
